@@ -1,12 +1,7 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-    // userId: {
-    //     type: String,
-    //     ref: 'User', // Reference to the User model
-    //     required: true,
-    //     unique: true, // Ensure each user can only add one review
-    // },
+  
     reviewerName: {
         type: String,
         required: true,

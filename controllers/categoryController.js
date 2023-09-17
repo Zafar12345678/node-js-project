@@ -184,6 +184,18 @@ const deleteSubcategory = async (req, res) => {
 };
 
 
+const get_category=async()=>{
+  try {
+      return Category.find();
+  } catch (error) {
+      res.status.send(error.message)
+  }
+}
+
+
+
+
+
 
 module.exports = {
   addCategory,
@@ -193,5 +205,6 @@ module.exports = {
   updateCategory,
   deleteCategory,
   deleteSubcategory,
-  updateSubcategory
+  updateSubcategory,
+  get_category
 };

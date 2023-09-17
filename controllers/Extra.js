@@ -1,12 +1,34 @@
 const Store = require('../models/storeModel');
-const User = require("../models/authModel")
-const fs = require('fs');
-const path = require('path');
+const User = require('../models/authModel');
+
+const updateAverageRating = async (storeId) => {
+    try {
+        const store = await Store.findById(storeId);
+        if (!store) {
+            console.error(`Store with ID ${storeId} not found.`);
+            return;
+        }
+
+        // Calculate the average rating based on existing reviews
+        const totalReviews = store.reviews.length;
+        const sumRatings = store.reviews.reduce((total, review) => total + review.rating, 0);
+        const averageRating = totalReviews === 0 ? 0 : sumRatings / totalReviews;
+
+        // Update the store's averageRating field
+        store.averageRating = averageRating;
+        await store.save();
+
+        console.log(`Average rating updated for store with ID ${storeId}: ${averageRating}`);
+    } catch (error) {
+        console.error(`Error updating average rating for store with ID ${storeId}: ${error.message}`);
+    }
+};
 
 const create_store = async (req, res) => {
     try {
         const userData = await User.findOne({ _id: req.body.vender_id });
         const logo = req.files['logo'][0].filename;
+
         if (userData) {
             if (!req.body.latitude || !req.body.longitude) {
                 res.status(200).json({ success: false, message: 'latitude and longitude must be required' });
@@ -26,84 +48,66 @@ const create_store = async (req, res) => {
                         state: req.body.state,
                         country: req.body.country,
                         location: {
-                            type: "Point", // Use "Point" with an uppercase 'P'
-                            coordinates: [parseFloat(req.body.longitude), parseFloat(req.body.latitude)]
-                        }
+                            type: 'Point', // Use "Point" with an uppercase 'P'
+                            coordinates: [parseFloat(req.body.longitude), parseFloat(req.body.latitude)],
+                        },
                     });
+
                     const storeData = await storeInstance.save();
+
+                    // Calculate the average rating when a new store is created
+                    await updateAverageRating(storeData._id);
+
                     res.status(200).json({ success: true, message: 'Store Data', data: storeData });
                 }
             }
-
         } else {
             res.status(400).json({ success: false, message: 'vender id does not exist' });
         }
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error', msg: error.message });
     }
-}
+};
 
 const find_near_store = async (req, res) => {
     try {
         const latitude = parseFloat(req.body.latitude);
         const longitude = parseFloat(req.body.longitude);
-        const category = req.body.category; // Add category filtering
-        // const minPrice = parseFloat(req.body.minPrice); // Parse minimum price from request body
-        // const maxPrice = parseFloat(req.body.maxPrice); // Parse maximum price from request body
-        // Construct the aggregation pipeline
+        const category = req.body.category;
+        const name = req.body.address;
+
         const pipeline = [
             {
                 $geoNear: {
                     near: {
                         type: 'Point',
-                        coordinates: [longitude, latitude], // Correct order of coordinates
+                        coordinates: [longitude, latitude],
                     },
                     key: 'location',
-                    maxDistance: 100 * 1000, // Set the maximum distance in kilometers (converted to meters)
+                    maxDistance: 100 * 1000,
                     distanceField: 'dist.calculated',
                     spherical: true,
                 },
             },
             {
                 $match: {
-                    category: category // Filter by category
-                }
+                    category: category,
+                    address: { $regex: new RegExp(name, 'i') },
+                },
             },
-            // Add more pipeline stages for additional filtering (e.g., by price, state, etc.)
-            // {
-            //     $match: {
-            //         price: { $gte: 10, $lte: 200 }, // Replace 50 and 200 with your desired minimum and maximum prices
-            //         state: "bihar" // Replace "California" with your desired state
-            //         // Add more filters as needed
-            //     }
-            // }
-
-            // Add more pipeline stages for additional filtering (e.g., by price, state, etc.)
-            // {
-            //     $match: {
-            //         price: { $gte: minPrice, $lte: maxPrice },
-            //         state: desiredState
-            //         // Add more filters as needed
-            //     }
-            // }
         ];
 
-        // Perform the aggregation
         const store_data = await Store.aggregate(pipeline);
 
-        // Check if any stores were found
         if (store_data.length === 0) {
             return res.status(404).json({ success: false, message: 'No stores found within 10 kilometers of the specified location with the given category and filters' });
         }
 
-        // Calculate distance in kilometers from meters and round to the nearest integer
         store_data.forEach(store => {
             const distanceInKilometers = Math.round(store.dist.calculated / 1000);
             const distanceInMeters = Math.round(store.dist.calculated);
 
-            // Add units to the distances
             store.dist.calculatedInKilometers = `${distanceInKilometers} km`;
             store.dist.calculatedInMeters = `${distanceInMeters} m`;
         });
@@ -118,14 +122,13 @@ const find_near_store = async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
+const get_store=async(id)=>{
+    try {
+        return Store.findOne({_id:id});
+    } catch (error) {
+        res.status.send(error.message)
+    }
+}
 
 
 
@@ -134,5 +137,6 @@ const find_near_store = async (req, res) => {
 
 module.exports = {
     create_store,
-    find_near_store
+    find_near_store,
+    get_store
 };

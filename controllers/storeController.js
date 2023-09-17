@@ -75,6 +75,7 @@ const find_near_store = async (req, res) => {
         const latitude = parseFloat(req.body.latitude);
         const longitude = parseFloat(req.body.longitude);
         const category = req.body.category;
+        const name = req.body.address; // This can be any field you want to search for
 
         const pipeline = [
             {
@@ -91,7 +92,20 @@ const find_near_store = async (req, res) => {
             },
             {
                 $match: {
-                    category: category,
+                    $and: [
+                        { category: category }, // Match the category exactly
+                        {
+                            $or: [
+                                { vender_id: { $regex: new RegExp(name, 'i') } }, // Search by vender_id
+                                { business_email: { $regex: new RegExp(name, 'i') } }, // Search by business_email
+                                { address: { $regex: new RegExp(name, 'i') } }, // Search by address
+                                { pin: { $regex: new RegExp(name, 'i') } }, // Search by pin
+                                { city: { $regex: new RegExp(name, 'i') } }, // Search by city
+                                { state: { $regex: new RegExp(name, 'i') } }, // Search by state
+                                { country: { $regex: new RegExp(name, 'i') } }, // Search by country
+                            ],
+                        },
+                    ],
                 },
             },
         ];
@@ -120,9 +134,9 @@ const find_near_store = async (req, res) => {
 
 
 
-const get_store=async(id)=>{
+const get_store = async (id) => {
     try {
-        return Store.findOne({_id:id});
+        return Store.findOne({ _id: id });
     } catch (error) {
         res.status.send(error.message)
     }

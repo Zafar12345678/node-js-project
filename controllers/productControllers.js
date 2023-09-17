@@ -8,7 +8,6 @@ const add_product = async (req, res) => {
         var arrImages = [];
         for (let i = 0; i < req.files.length; i++) {
             arrImages[i] = req.files[i].filename;
-
         }
         var product = new Product({
             vender_id: req.body.vender_id,
@@ -19,11 +18,10 @@ const add_product = async (req, res) => {
             category_id: req.body.category_id,
             sub_cat_id: req.body.sub_cat_id,
             images: arrImages,
-
-        })
+        });
         const product_data = await product.save();
 
-        res.status(200).json({ success: true, message: 'product successfully added', data: product_data });
+        res.status(200).json({ success: true, message: 'Product successfully added', data: product_data });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
@@ -32,14 +30,15 @@ const add_product = async (req, res) => {
 
 const get_product = async (req, res) => {
     try {
+        const vendorName = req.params.vendorName; // Get the vendor's name from the request parameters
         var send_data = [];
-        var cat_data = await category_container.getCategories();
+        var cat_data = await category_container.get_category();
         console.log("cat_data:", cat_data); // Log cat_data for debugging
         if (cat_data.length > 0) {
             for (let i = 0; i < cat_data.length; i++) {
                 var product_data = [];
                 var cat_id = cat_data[i]['_id'].toString();
-                var cat_pro = await Product.find({ category_id: cat_id });
+                var cat_pro = await Product.find({ category_id: cat_id, vender_id: vendorName }); // Filter products by vendor name
                 console.log("cat_pro:", cat_pro); // Log cat_pro for debugging
                 if (cat_pro.length > 0) {
                     for (let j = 0; j < cat_pro.length; j++) {
@@ -59,7 +58,7 @@ const get_product = async (req, res) => {
                     });
                 }
             }
-            res.status(200).json({ success: true, message: 'product successfully added', data: send_data });
+            res.status(200).json({ success: true, message: 'Products successfully retrieved', data: send_data });
         } else {
             res.status(200).json({ success: false, message: 'No categories found', data: send_data });
         }
@@ -67,12 +66,10 @@ const get_product = async (req, res) => {
         console.error("Caught error:", error);
         res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
     }
-}
-
+};
 
 
 module.exports = {
     add_product,
-    get_product,
-    get_product
+    get_product // Rename the function to get_products_by_vendor
 };

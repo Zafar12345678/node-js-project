@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
 require('dotenv').config();
+const path = require('path');
+const fs = require('fs');
 // const verifyToken = require("./middleware/auth");
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -29,8 +31,20 @@ app.use('/api/store/providers/category', storecategories);
 app.use('/api/vender/review', reviewRoutes);
 app.use('/api/vender/product', productRoutes);
 
-
-
+const imageDirectory = path.join(__dirname, 'public', 'images'); 
+app.get('/images/:imageName', (req, res) => {
+    const imageName = req.params.imageName;
+    const imagePath = path.join(imageDirectory, imageName);
+  
+    if (fs.existsSync(imagePath)) {
+      // Check if the image file exists
+      const imageStream = fs.createReadStream(imagePath);
+      imageStream.pipe(res);
+    } else {
+      // Image not found
+      res.status(404).json({ message: 'Image not found' });
+    }
+  });
 
 const PORT = 8000;
 const DB = "mongodb+srv://munna572000:Munna686622@salon.fboq520.mongodb.net/Booking?retryWrites=true&w=majority";
