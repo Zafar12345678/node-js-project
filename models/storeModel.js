@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-  
+
     reviewerName: {
         type: String,
         required: true,
@@ -26,8 +26,13 @@ const storeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    name: {
+        type: String,
+        required: true,
+    },
+
     logo: {
-        type: [String],
+        type: Array,
         required: true,
     },
     business_email: {

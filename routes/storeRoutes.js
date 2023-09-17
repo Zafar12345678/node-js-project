@@ -17,9 +17,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Define routes
-router.post('/addstore', upload.fields([
-  { name: 'logo', maxCount: 1 }
-]), storeController.create_store); // Change to storeController
+router.post('/addstore',upload.array('logo',5),storeController.create_store); // Change to storeController
 
 //find near store get
 router.post('/nearstore',storeController.find_near_store); // Change to storeController

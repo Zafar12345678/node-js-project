@@ -27,7 +27,12 @@ const updateAverageRating = async (storeId) => {
 const create_store = async (req, res) => {
     try {
         const userData = await User.findOne({ _id: req.body.vender_id });
-        const logo = req.files['logo'][0].filename;
+        // Create an array to store the image filenames
+        const arrImages = [];
+
+        for (let i = 0; i < req.files.length; i++) {
+            arrImages.push(req.files[i].filename);
+        }
 
         if (userData) {
             if (!req.body.latitude || !req.body.longitude) {
@@ -40,7 +45,8 @@ const create_store = async (req, res) => {
                     const storeInstance = new Store({
                         category: req.body.category,
                         vender_id: req.body.vender_id,
-                        logo,
+                        name:req.body.name,
+                        logo:arrImages,
                         business_email: req.body.business_email,
                         address: req.body.address,
                         pin: req.body.pin,
@@ -75,7 +81,7 @@ const find_near_store = async (req, res) => {
         const latitude = parseFloat(req.body.latitude);
         const longitude = parseFloat(req.body.longitude);
         const category = req.body.category;
-        const name = req.body.address; // This can be any field you want to search for
+        const name = req.body.name; // This can be any field you want to search for
 
         const pipeline = [
             {
@@ -96,6 +102,7 @@ const find_near_store = async (req, res) => {
                         { category: category }, // Match the category exactly
                         {
                             $or: [
+                                { name: { $regex: new RegExp(name, 'i') } }, // Search by vender_id
                                 { vender_id: { $regex: new RegExp(name, 'i') } }, // Search by vender_id
                                 { business_email: { $regex: new RegExp(name, 'i') } }, // Search by business_email
                                 { address: { $regex: new RegExp(name, 'i') } }, // Search by address
