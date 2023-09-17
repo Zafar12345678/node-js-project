@@ -37,9 +37,10 @@ const addReviewToStore = async (req, res) => {
         // Calculate the average rating for the store
         const totalRatings = store.reviews.reduce((sum, review) => sum + review.rating, 0);
         const averageRating = totalRatings / store.reviews.length;
+        // averageRating.toFixed(1)
 
         // Update the store's average rating
-        store.averageRating = averageRating;
+        store.averageRating = averageRating.toFixed(1);
 
         // Save the updated store document
         await store.save();

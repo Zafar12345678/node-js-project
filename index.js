@@ -10,6 +10,8 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const storeRoutes = require('./routes/storeRoutes');
 const storecategories = require('./routes/storecategoryRoutes');
 const reviewRoutes = require('./routes/revieRoutes');
+const productRoutes = require('./routes/productRoutes');
+
 
 
 const app = express();
@@ -21,10 +23,11 @@ app.use(cors());
 
 // Use authRoutes for both endpoints
 app.use('/user', authRoutes);
-app.use('/api/vender', categoryRoutes);
+app.use('/api/vender/product', categoryRoutes);
 app.use('/api/store/providers', storeRoutes);
 app.use('/api/store/providers/category', storecategories);
 app.use('/api/vender/review', reviewRoutes);
+app.use('/api/vender/product', productRoutes);
 
 
 

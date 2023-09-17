@@ -117,7 +117,24 @@ const find_near_store = async (req, res) => {
     }
 };
 
+
+
+
+const get_store=async(id)=>{
+    try {
+        return Store.findOne({_id:id});
+    } catch (error) {
+        res.status.send(error.message)
+    }
+}
+
+
+
+
+
+
 module.exports = {
     create_store,
-    find_near_store
+    find_near_store,
+    get_store
 };
