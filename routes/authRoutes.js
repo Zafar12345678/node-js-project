@@ -1,5 +1,5 @@
 const express = require('express');
-const authController = require('../../../Downloads/Salon_API-master/Salon_API-master/controllers/authController');
+const authController = require('../controllers/authController');
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
