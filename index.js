@@ -46,6 +46,13 @@ app.get('/images/:imageName', (req, res) => {
     }
   });
 
+  app.get('/', (req, res) => {
+   
+ 
+      res.status(404).json('server is runnimng at render');
+    
+  });
+
 const PORT = 8000;
 const DB = "mongodb+srv://munna572000:Munna686622@salon.fboq520.mongodb.net/Booking?retryWrites=true&w=majority";
 
