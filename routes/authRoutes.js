@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Define routes
-router.post('/signup',Auth, upload.fields([
+router.post('/signup', upload.fields([
     // { name: 'adharcard', maxCount: 1 },
     // { name: 'pancard', maxCount: 1 },
     // { name: 'drivarylience', maxCount: 1 },
