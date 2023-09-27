@@ -49,7 +49,7 @@ app.get('/images/:imageName', (req, res) => {
   app.get('/', (req, res) => {
    
  
-      res.status(404).json('server is runnimng at render');
+      res.send('server is runnimng at render');
     
   });
 
