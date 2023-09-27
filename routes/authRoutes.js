@@ -3,7 +3,7 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
-const Auth=require("../middleware/auth")
+const Auth = require("../middleware/auth")
 
 // Set storage for uploaded images using multer
 const storage = multer.diskStorage({
@@ -18,14 +18,10 @@ const upload = multer({ storage: storage });
 
 // Define routes
 router.post('/signup', upload.fields([
-    // { name: 'adharcard', maxCount: 1 },
-    // { name: 'pancard', maxCount: 1 },
-    // { name: 'drivarylience', maxCount: 1 },
-    // { name: 'signature', maxCount: 1 },
-    { name: 'images', maxCount: 1 }
+  { name: 'photo', maxCount: 1 }
 ]), authController.signup);
 
-router.post('/login',Auth, authController.login);
+router.post('/login', Auth, authController.login);
 router.post('/update-password', authController.updatePassword);
 
 module.exports = router;
