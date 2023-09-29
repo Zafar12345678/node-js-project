@@ -95,6 +95,7 @@ const find_near_store = async (req, res) => {
                     distanceField: 'dist.calculated',
                     spherical: true,
                 },
+            
             },
             {
                 $match: {
