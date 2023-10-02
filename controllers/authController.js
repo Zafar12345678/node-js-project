@@ -51,10 +51,10 @@ async function signup(req, res) {
     //   expiresIn: '24h',
     // });
 
-    res.json({user: result });
+    res.json({ user: result });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' ,error: error.message });
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 }
 
@@ -63,6 +63,8 @@ async function signup(req, res) {
 
 async function login(req, res) {
   const { email, mobile, password } = req.body;
+
+  console.log('Received login request:', { email, mobile, password }); // Debugging log
 
   try {
     const isEmail = /\S+@\S+\.\S+/.test(email);
@@ -74,6 +76,7 @@ async function login(req, res) {
 
     // Find the user based on email or mobile number
     let user;
+
     // Find the user based on email or mobile number
     if (isEmail) {
       user = await User.findOne({ email });
@@ -91,7 +94,7 @@ async function login(req, res) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ email: user.email ,mobile:user.mobile , id:user._id }, JWT_SECRET, {
+    const token = jwt.sign({ email: user.email, mobile: user.mobile, id: user._id }, JWT_SECRET, {
       expiresIn: '24h',
     });
 
@@ -102,7 +105,6 @@ async function login(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
-
 
 
 

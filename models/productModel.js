@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     name: {
-        type: [String],
+        type: String,
         required: true,
     },
     price: {
@@ -44,4 +44,4 @@ const productSchema = new mongoose.Schema({
 //     return val.lenght >=5;
 // }
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model('services', productSchema);

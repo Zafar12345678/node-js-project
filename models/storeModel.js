@@ -59,6 +59,7 @@ const storeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    currentBooking:[],
     location: {
         type: {
             type: String,
@@ -82,4 +83,4 @@ const storeSchema = new mongoose.Schema({
 // Define a 2dsphere index for the location field
 storeSchema.index({ location: '2dsphere' });
 
-module.exports = mongoose.model('Store', storeSchema);
+module.exports = mongoose.model('store', storeSchema);

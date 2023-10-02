@@ -6,13 +6,15 @@ const cors = require('cors');
 require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
-// const verifyToken = require("./middleware/auth");
+const verifyToken = require("./middleware/auth");
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const storeRoutes = require('./routes/storeRoutes');
 const storecategories = require('./routes/storecategoryRoutes');
 const reviewRoutes = require('./routes/revieRoutes');
 const productRoutes = require('./routes/productRoutes');
+const bookingRoutes=require("./routes/bookingRoutes");
+const adminRoutes=require("./routes/adminRoutes")
 
 
 
@@ -25,12 +27,23 @@ app.use(cors());
 
 // Use authRoutes for both endpoints
 app.use('/user', authRoutes);
+app.use('/api/user', bookingRoutes);
+
+
+// Use vender for both endpoints
+app.use('/api/vender',storeRoutes);
 app.use('/api/vender/product', categoryRoutes);
-app.use('/api/store/providers', storeRoutes);
 app.use('/api/store/providers/category', storecategories);
 app.use('/api/vender/review', reviewRoutes);
 app.use('/api/vender/product', productRoutes);
 
+
+//admin routes     
+app.use('/api/admin', adminRoutes);
+
+
+
+//image section
 const imageDirectory = path.join(__dirname, 'public', 'images'); 
 app.get('/images/:imageName', (req, res) => {
     const imageName = req.params.imageName;
@@ -46,7 +59,7 @@ app.get('/images/:imageName', (req, res) => {
     }
   });
 
-  app.get('/', (req, res) => {
+  app.get('/',(req, res) => {
    
  
       res.send('server is runnimng at render');
