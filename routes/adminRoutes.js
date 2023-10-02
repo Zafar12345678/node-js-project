@@ -4,6 +4,7 @@ const authController = require('../controllers/authController');
 const storeController = require('../controllers/storeController');
 const storecategoryController = require('../controllers/storecategoryController');
 const productController = require('../controllers/productControllers'); // Change to storeController
+const serviceController = require('../controllers/serviceController');
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
@@ -27,10 +28,9 @@ router.post('/nearstore', storeController.find_near_store); // Change to storeCo
 
 
 
-
-
-
-
+// Define routes for adding and getting services
+router.post('/addservices', serviceController.addServices);
+router.get('/services', serviceController.getServices);
 
 
 // Booking user list 
@@ -41,12 +41,14 @@ router.get('/bookings/:bookingId', bookingController.getBookingbyId);
 
 
 
+
+
+
 // add category your routes
 router.post('/addstorecategory', storecategoryController.addCategory);
 router.get('/storecategory', storecategoryController.getCategories);
 router.put('/storecategories/:categoryId', storecategoryController.updateCategory);
 router.delete('/storecategories/:categoryId', storecategoryController.deleteCategory);
-
 
 
 

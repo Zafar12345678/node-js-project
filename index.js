@@ -14,7 +14,8 @@ const storecategories = require('./routes/storecategoryRoutes');
 const reviewRoutes = require('./routes/revieRoutes');
 const productRoutes = require('./routes/productRoutes');
 const bookingRoutes=require("./routes/bookingRoutes");
-const adminRoutes=require("./routes/adminRoutes")
+const adminRoutes=require("./routes/adminRoutes");
+const serviceRoutes =require("./routes/serviceRoutes")
 
 
 
@@ -24,6 +25,8 @@ app.use(bodyParser.json());
 
 // Use cors middleware to enable CORS
 app.use(cors());
+
+
 
 // Use authRoutes for both endpoints
 app.use('/user', authRoutes);

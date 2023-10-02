@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
-const Schema = new mongoose.Schema({
+const serviceSchema = new mongoose.Schema({
+
+    category: {
+        type: String,
+        required: true,
+    },
+
 
     servicename: {
         type: String,
@@ -31,4 +37,4 @@ const Schema = new mongoose.Schema({
 
 
 
-module.exports = mongoose.model('services', productSchema);
+module.exports = mongoose.model('totalservices', serviceSchema);
