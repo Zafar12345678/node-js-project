@@ -3,7 +3,6 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
-const Auth = require("../middleware/auth")
 
 // Set storage for uploaded images using multer
 const storage = multer.diskStorage({
