@@ -1,4 +1,4 @@
-const Service = require('../models/serviceModel'); // Import the Service model
+const Service = require('../models/servicesModels'); // Import the Service model
 const Store = require('../models/storeModel');
 
 
