@@ -21,7 +21,7 @@ router.post('/signup', upload.fields([
   { name: 'photo', maxCount: 1 }
 ]), authController.signup);
 
-router.post('/login',Auth, authController.login);
+router.post('/login', authController.login);
 router.post('/update-password', authController.updatePassword);
 
 module.exports = router;
