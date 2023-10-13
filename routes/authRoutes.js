@@ -24,4 +24,15 @@ router.post('/signup', upload.fields([
 router.post('/login', authController.login);
 router.post('/update-password', authController.updatePassword);
 
+
+// Define routes
+router.get('/getprofile/:userId', authController.getUserById);
+router.put('/updateprofile/:userId', authController.updateUserById);
+
+
+
+
+
+
+
 module.exports = router;

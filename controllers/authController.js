@@ -32,24 +32,20 @@ async function signup(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user
-    const photo = req.files['photo'][0].filename;
-
     const newUser = new User({
       name,
       email,
       Type,
       mobile,
-      photo,
       password: hashedPassword,
     });
 
+    // // Check if a photo was sent in the request
+    // if (req.files && req.files['photo'] && req.files['photo'][0]) {
+    //   newUser.photo = req.files['photo'][0].filename;
+    // }
+
     const result = await newUser.save();
-
-    // Create a token
-
-    // const token = jwt.sign({ email: newUser.email ,mobile:newUser.mobile , id:newUser._id }, JWT_SECRET, {
-    //   expiresIn: '24h',
-    // });
 
     res.json({ user: result });
   } catch (error) {
@@ -57,6 +53,7 @@ async function signup(req, res) {
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 }
+
 
 
 
@@ -143,7 +140,58 @@ async function updatePassword(req, res) {
 
 
 
+// GET user by ID
+const getUserById = async (req, res) => {
+  const userId = req.params.userId;
 
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+// UPDATE user by ID
+const updateUserById = async (req, res) => {
+  const userId = req.params.userId;
+  const { name, email, Type, mobile, password } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user properties
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (Type) user.Type = Type;
+    if (mobile) user.mobile = mobile;
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+    }
+
+    // Check if a photo was sent in the request and update it
+    if (req.files && req.files['photo'] && req.files['photo'][0]) {
+      user.photo = req.files['photo'][0].filename;
+    }
+
+    const updatedUser = await user.save();
+    res.json({ user: updatedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
 
 
 
@@ -155,5 +203,7 @@ async function updatePassword(req, res) {
 module.exports = {
   signup,
   login,
-  updatePassword
+  updatePassword,
+  getUserById,
+  updateUserById
 };
