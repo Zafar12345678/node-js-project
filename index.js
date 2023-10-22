@@ -39,7 +39,7 @@ app.use('/api/vender/product', categoryRoutes);
 app.use('/api/store/providers/category', storecategories);
 app.use('/api/vender/review', reviewRoutes);
 app.use('/api/vender/product', productRoutes);
-
+app.use('/api/admin/service', serviceRoutes);
 
 //admin routes     
 app.use('/api/admin', adminRoutes);

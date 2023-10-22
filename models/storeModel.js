@@ -33,7 +33,7 @@ const storeSchema = new mongoose.Schema({
 
     logo: {
         type: Array,
-        required: true,
+        // required: true,
     },
     business_email: {
         type: String,
