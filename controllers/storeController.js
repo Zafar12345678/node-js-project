@@ -28,11 +28,16 @@ const create_store = async (req, res) => {
     try {
         const userData = await User.findOne({ _id: req.body.vender_id });
         // Create an array to store the image filenames
-        const arrImages = [];
+        // const arrImages = [];
 
-        for (let i = 0; i < req.files.length; i++) {
-            arrImages.push(req.files[i].filename);
-        }
+        // if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+        //     return res.status(400).json({ success: false, message: 'No image files provided' });
+        // }
+
+
+        // for (let i = 0; i < req.files.length; i++) {
+        //     arrImages.push(req.files[i].filename);
+        // }
 
         if (userData) {
             if (!req.body.latitude || !req.body.longitude) {
@@ -45,8 +50,8 @@ const create_store = async (req, res) => {
                     const storeInstance = new Store({
                         category: req.body.category,
                         vender_id: req.body.vender_id,
-                        name:req.body.name,
-                        logo:arrImages,
+                        name: req.body.name,
+                        // logo: arrImages,
                         business_email: req.body.business_email,
                         address: req.body.address,
                         pin: req.body.pin,
@@ -72,7 +77,7 @@ const create_store = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal server error', msg: error.message });
+        res.status(500).json({ message: 'Internal server error', message: error.message });
     }
 };
 
@@ -95,7 +100,7 @@ const find_near_store = async (req, res) => {
                     distanceField: 'dist.calculated',
                     spherical: true,
                 },
-            
+
             },
             {
                 $match: {
